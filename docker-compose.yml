@@ -1,0 +1,35 @@
+version: '2'
+services:
+    mongo:
+        container_name: mongo
+        image: mongo
+        volumes:
+          - mongo-volume:/data/db             
+        #restart: always  
+    redis:
+        container_name: redis
+        image: redis
+        volumes:
+          - redis-volume:/data             
+        #restart: always    
+    screeps:
+        container_name: screeps
+        build: .      
+        ports:
+          - "21025:21025"
+          - "21026:21026"
+        environment:
+          - STEAMKEY=${STEAMKEY}       
+          - MONGO_LINK=mongo
+          - REDIS_LINK=redis
+        volumes:
+          - screeps-volume:/screeps
+        depends_on:
+          - mongo
+          - redis
+        #restart: always
+
+volumes:
+    mongo-volume:
+    redis-volume:
+    screeps-volume:
